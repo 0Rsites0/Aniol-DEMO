@@ -10,6 +10,14 @@ Set-Location $repoRoot
 
 $gitCommand = Get-Command git -ErrorAction SilentlyContinue
 if (-not $gitCommand) {
+    $fallbackGit = 'C:\Program Files\Git\cmd\git.exe'
+    if (Test-Path $fallbackGit) {
+        $env:Path = "C:\Program Files\Git\cmd;$env:Path"
+        $gitCommand = Get-Command git -ErrorAction SilentlyContinue
+    }
+}
+
+if (-not $gitCommand) {
     Write-Error "Git is not installed or not available in PATH. Install Git, then run this script again."
 }
 
